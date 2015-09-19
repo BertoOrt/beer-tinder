@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css"> -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="./style.css" >
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./app.js"></script>
+</head>
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"> Beer-Tinder</a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapseNav" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="collapseNav">
+      <div class="navbar-text navbar-right"><a href="/beer" class="navbar-link">Beer List</a></div>
+    </div>
+  </div>
+</nav>
+  <div class="container">
+    <div class="swipe">
+      <div class="image"><div class="avatar display"></div></div>
+      <div class="beer"><div class="avatar beerImage"><div class="status dislike">Dislike!</div><div class="status like">Like!</div></div></div>
+    </div>
+    <div class="buttons">
+      <input class='btn btn-danger btns dislikeButton' type="button" name="name" value="Dislike">
+      <input class='btn btn-warning btns likeButton' type="button" name="name" value="Like">
+    </div>
+  </div>
+</body>
+</html>
