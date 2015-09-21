@@ -1,14 +1,25 @@
-.ui-page {
-  background-color: white;
+.ui-page, body, html {
+  background-color: #F1F1D2;
 }
 
 .ui-loader {
   display: none;
 }
 
+.title {
+  text-align: center;
+}
+
+.title h1 {
+  display: inline-block;
+}
+.title h2 {
+  margin-top: 0;
+}
+
 .swipe {
   display: block;
-  height: 450px;
+  height: 400px;
   margin: 0 auto;
   position: relative;
   list-style-type: none;
@@ -20,7 +31,7 @@
   user-select: none;
 }
 .image, .beer {
-  background: white;
+  background: #F1F1D2;
   border-radius: 10px;
   color: #fff;
   width: 360px;
@@ -43,7 +54,7 @@
 }
 
 .avatar {
-  background: white;
+  background: #F1F1D2;
   width: 340px;
   height: 340px;
   display: block;
@@ -79,12 +90,11 @@
 
 .display {
   display: block;
-  background-image: url(http://www.clker.com/cliparts/2/k/n/l/C/Q/transparent-green-checkmark-hi.png);
   background-size: contain;
 }
 
 .beerImage {
-  background-image: url(http://seanmartorana.com/wp-content/uploads/2011/04/TwoGuysOnBeerIcon.png);
+  background-image: url(./images/beerImage.jpg);
   background-size: contain;
 }
 
@@ -105,4 +115,8 @@
 .btns {
   width: 80px;
   margin-left: 10px;
+}
+
+nav.navbar {
+  border-radius: 0;
 }

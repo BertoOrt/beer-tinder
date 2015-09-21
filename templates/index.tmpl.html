@@ -1,16 +1,136 @@
 <!DOCTYPE html>
 <html>
-  {{template "header.tmpl.html"}}
+{{template "header.tmpl.html"}}
 <body>
   {{template "navbar.tmpl.html"}}
   <div class="container">
+    <div class="title">
+      <div class="beerName">
+        <h1>Beer</h1> <a href="#"><i class="fa fa-info-circle"></i></a>
+      </div>
+      <div class="breweryName">
+        <h2>Brewery</h2>
+      </div>
+    </div>
     <div class="swipe">
       <div class="image"><div class="avatar display"></div></div>
       <div class="beer"><div class="avatar beerImage"><div class="status dislike">Dislike!</div><div class="status like">Like!</div></div></div>
     </div>
     <div class="buttons">
       <input class='btn btn-danger btns dislikeButton' type="button" name="name" value="Dislike">
-      <input class='btn btn-warning btns likeButton' type="button" name="name" value="Like">
+      <input class='btn btn-success btns likeButton' type="button" name="name" value="Like">
+    </div>
+  </div>
+  <div class="modal fade" id="beerList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Beer List</h4>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Brewery
+                </th>
+                <th>
+                  Style
+                </th>
+                <th>
+                  Alcohol
+                </th>
+                <th>
+                  <i class="fa fa-thumbs-up"></i>
+                </th>
+                <th>
+                  <i class="fa fa-thumbs-down"></i>
+                </th>
+                <th>
+
+                </th>
+                <th>
+
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Example Name
+                </td>
+                <td>
+                  Deschutes
+                </td>
+                <td>
+                  IPA
+                </td>
+                <td>
+                  12
+                </td>
+                <td>
+                  32
+                </td>
+                <td>
+                  9
+                </td>
+                <td>
+                  <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
+                  <button data-toggle="modal" data-target="#newBeer" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></button>
+                  <button class="btn btn-danger btn-xs" ><i class="fa fa-trash-o"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="newBeer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add a Beer</h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" action="/addBeer" method="post">
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">Name</label>
+              <div class="col-sm-10">
+                <input type="text" name="name" class="form-control" id="name" >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="brewery" class="col-sm-2 control-label">Brewery</label>
+              <div class="col-sm-10">
+                <input type="text" name="brewery" class="form-control" id="brewery">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="style" class="col-sm-2 control-label">Style</label>
+              <div class="col-sm-10">
+                <input type="text" name="style" class="form-control" id="style">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alcohol" class="col-sm-2 control-label">Alcohol</label>
+              <div class="col-sm-10">
+                <input type="number" name="alcohol" class="form-control" id="alcohol">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Brew!</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </body>
