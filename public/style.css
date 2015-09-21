@@ -34,7 +34,7 @@
   background: #F1F1D2;
   border-radius: 10px;
   color: #fff;
-  width: 360px;
+  width: 90%;
   height: 360px;
   position: absolute;
 }
@@ -55,7 +55,7 @@
 
 .avatar {
   background: #F1F1D2;
-  width: 340px;
+  width: 100%;
   height: 340px;
   display: block;
   margin: 0 auto;
@@ -103,7 +103,7 @@
 }
 
 .container {
-  width: 400px;
+  width: 300px;
   margin: 0 auto;
 }
 
