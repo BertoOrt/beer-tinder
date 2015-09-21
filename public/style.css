@@ -30,7 +30,7 @@
   -ms-user-select: none;
   user-select: none;
 }
-.image, .beer {
+.image, #beer {
   background: #F1F1D2;
   border-radius: 10px;
   color: #fff;
