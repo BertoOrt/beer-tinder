@@ -15,11 +15,13 @@ import (
 
 // Beer is the model for mongo
 type Beer struct {
-	Name    string
-	Brewery string
-	Style   string
-	Alcohol int
-	current bool
+	Name        string
+	Brewery     string
+	Style       string
+	Alcohol     int
+	Description string
+	URL         string
+	current     bool
 }
 
 //Query is used to find the current beer
@@ -49,7 +51,7 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		var beers []Beer
 		col.Find(nil).All(&beers)
-		current := col.Find(Query{current: true})
+		current := col.Find(&Query{current: true})
 		c.HTML(http.StatusOK, "index.tmpl.html", gin.H{
 			"beers":   beers,
 			"current": current,
@@ -60,8 +62,36 @@ func main() {
 		name := c.PostForm("name")
 		brewery := c.PostForm("brewery")
 		style := c.PostForm("style")
+		url := c.PostForm("url")
+		description := c.PostForm("description")
+		alcohol, _ := strconv.Atoi(c.PostForm("alcohol"))
+		col.UpdateAll(nil, &Beer{current: false})
+		err = col.Insert(&Beer{Name: name, Brewery: brewery, Style: style, Alcohol: alcohol, Description: description, URL: url, current: true})
+		if err != nil {
+			panic(err)
+		}
+		c.Redirect(http.StatusMovedPermanently, "/")
+	})
+
+	r.POST("/deleteBeer", func(c *gin.Context) {
+		name := c.PostForm("name")
+		brewery := c.PostForm("brewery")
+		style := c.PostForm("style")
 		alcohol, _ := strconv.Atoi(c.PostForm("alcohol"))
 		err = col.Insert(&Beer{Name: name, Brewery: brewery, Style: style, Alcohol: alcohol, current: true})
+		if err != nil {
+			panic(err)
+		}
+		c.Redirect(http.StatusMovedPermanently, "/")
+	})
+
+	r.POST("/editBeer", func(c *gin.Context) {
+		name := c.PostForm("name")
+		brewery := c.PostForm("brewery")
+		style := c.PostForm("style")
+		url := c.PostForm("url")
+		alcohol, _ := strconv.Atoi(c.PostForm("alcohol"))
+		err = col.Insert(&Beer{Name: name, Brewery: brewery, Style: style, URL: url, Alcohol: alcohol, current: true})
 		if err != nil {
 			panic(err)
 		}

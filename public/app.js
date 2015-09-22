@@ -45,4 +45,16 @@ $(document).ready(function(){
       }.bind(this), 500);
       like()
     })
+
+    $('.newBeerForm').submit(function (e) {
+      if ($(".verifyName").val() === "" || $(".verifyBrewery").val() === "") {
+        e.preventDefault()
+      }
+    })
+
+    $('.editBeerForm').submit(function (e) {
+      if ($(".verifyEditName").val() === "" || $(".verifyEditBrewery").val() === "") {
+        e.preventDefault()
+      }
+    })
 });
