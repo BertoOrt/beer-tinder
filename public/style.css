@@ -1,5 +1,5 @@
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-link {
-  color: #FBB700;
+  color: #F7901E;
 }
 
 .ui-page, body, html {
@@ -123,4 +123,29 @@
 
 nav.navbar {
   border-radius: 0;
+}
+
+.infoLabel {
+  font-weight: bold;
+}
+
+.infoUp {
+  color: #5CB85C;
+}
+
+.infoDown {
+  color: #D9534F;
+}
+
+.score {
+  padding: 10px;
+  font-size: 200%;
+}
+
+.info {
+  padding: 10px;
+}
+
+.beerInformation td {
+  width: 10%;
 }

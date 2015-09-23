@@ -57,4 +57,9 @@ $(document).ready(function(){
         e.preventDefault()
       }
     })
+
+    var url = $('.url').val()
+    if (url !== "") {
+      $(".beerImage").css("background-image", "url(" + url + ")")
+    }
 });

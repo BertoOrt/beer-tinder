@@ -6,14 +6,15 @@
   <div class="container">
     <div class="title">
       <div class="beerName">
-        <h1>Beer</h1> <a href="#"><i class="fa fa-info-circle"></i></a>
+        <h1>{{.current.ID}}</h1> <a href="#" data-toggle="modal" data-target="#showBeer"><i class="fa fa-info-circle"></i></a>
       </div>
       <div class="breweryName">
-        <h2>Brewery</h2>
+        <h2>{{.current.Brewery}}</h2>
       </div>
     </div>
     <div class="swipe">
       <div class="image"><div class="avatar display"></div></div>
+      <input class="url" type="hidden" name="name" value={{.current.URL}}>
       <div id="beer"><div class="avatar beerImage"><div class="status dislike">Dislike!</div><div class="status like">Like!</div></div></div>
     </div>
     <div class="buttons">
@@ -59,31 +60,42 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  Example Name
-                </td>
-                <td>
-                  Deschutes
-                </td>
-                <td>
-                  IPA
-                </td>
-                <td>
-                  12
-                </td>
-                <td>
-                  32
-                </td>
-                <td>
-                  9
-                </td>
-                <td>
-                  <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
-                  <button data-toggle="modal" data-target="#editBeer" class="editBeer btn btn-info btn-xs"><i class="fa fa-edit"></i></button>
-                  <button class="btn btn-danger btn-xs" ><i class="fa fa-trash-o"></i></button>
-                </td>
-              </tr>
+              {{ $length := len .beers }}
+              {{if eq $length 0}}
+                <tr>
+                  <td>
+                    No Beers Added
+                  </td>
+                </tr>
+              {{else}}
+                {{range $key, $beer := .beers}}
+                  <tr>
+                    <td>
+                      {{$beer.Name}}
+                    </td>
+                    <td>
+                      {{$beer.Brewery}}
+                    </td>
+                    <td>
+                      {{$beer.Style}}
+                    </td>
+                    <td>
+                      {{$beer.Alcohol}} %
+                    </td>
+                    <td>
+                      {{$beer.Up}}
+                    </td>
+                    <td>
+                      {{$beer.Down}}
+                    </td>
+                    <td>
+                      <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
+                      <button data-toggle="modal" data-target={{print "#edit" $beer.ID}} class="editBeer btn btn-info btn-xs"><i class="fa fa-edit"></i></button>
+                      <button class="btn btn-danger btn-xs" ><i class="fa fa-trash-o"></i></button>
+                    </td>
+                  </tr>
+                {{end}}
+              {{end}}
             </tbody>
           </table>
         </div>
@@ -145,57 +157,139 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="editBeer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  {{range $key, $beer := .beers}}
+    <div class="modal fade" id={{print "edit" $beer.ID}} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Edit Beer</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" action="/editBeer" method="post">
+              <div class="form-group">
+                <label for="name" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                  <input class="beerName verifyEditName form-control" type="text" name="name" id="name" value={{$beer.Name}} >
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="brewery" class="col-sm-2 control-label">Brewery</label>
+                <div class="col-sm-10">
+                  <input class="beerBrewery verifyEditBrewery form-control" type="text" name="brewery" value={{$beer.Brewery}} id="brewery">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="style" class="col-sm-2 control-label">Style</label>
+                <div class="col-sm-10">
+                  <input class="beerStyle form-control" type="text" name="style" value={{$beer.Style}} id="style">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="alcohol" class="col-sm-2 control-label">Alcohol</label>
+                <div class="col-sm-10">
+                  <input class="beerAlcohol form-control" type="number" name="alcohol" value={{$beer.Alcohol}} id="alcohol">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="url" class="col-sm-2 control-label">Image Url</label>
+                <div class="col-sm-10">
+                  <input type="url" name="url" class="form-control" value={{$beer.URL}} id="url">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="alcohol" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                  <textarea name="description" rows="8" cols="40" class="form-control">{{$beer.Description}}</textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-default">Re-Brew!</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{end}}
+  <div class="modal fade" id="showBeer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Edit Beer</h4>
+          <h4 class="modal-title" id="myModalLabel">{{.current.Name}}</h4>
         </div>
         <div class="modal-body">
-          <form class="form-horizontal" action="/addBeer" method="post">
-            <div class="form-group">
-              <label for="name" class="col-sm-2 control-label">Name</label>
-              <div class="col-sm-10">
-                <input class="beerName verifyEditName form-control" type="text" name="name" id="name" >
+          <table class="beerInformation">
+            <tr>
+              <td>
+                <div class="infoLabel">Brewery </div>
+              </td>
+              <td>
+                {{.current.Brewery}}
+              </td>
+              <td>
+
+              </td>
+              <td>
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="infoLabel">Style</div>
+              </td>
+              <td>
+                {{if .current.Style}}
+                  {{.current.Style}}
+                {{else}}
+                  n/a
+                {{end}}
+              </td>
+              <td>
+                <div class="infoUp">
+                  <i class="fa fa-thumbs-up"></i> {{.current.Up}}
+                </div>
+              </td>
+              <td>
+                <div class="infoDown">
+                  <i class="fa fa-thumbs-down"></i> {{.current.Down}}
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="infoLabel">Alcohol</div>
+              </td>
+              <td>
+                {{if .current.Alcohol}}
+                  {{.current.Alcohol}}%
+                {{else}}
+                  n/a
+                {{end}}
+              </td>
+            </tr>
+          </table>
+          <div class="info">
+            <div class="row">
+              <div class="col-md-12">
+                <p class="infoLabel">
+                  Info:
+                </p>
               </div>
             </div>
-            <div class="form-group">
-              <label for="brewery" class="col-sm-2 control-label">Brewery</label>
-              <div class="col-sm-10">
-                <input class="beerBrewery verifyEditBrewery form-control" type="text" name="brewery" id="brewery">
+            <div class="row">
+              <div class="col-md-12">
+                {{if .current.Description}}
+                  {{.current.Description}}
+                {{else}}
+                  none
+                {{end}}
               </div>
             </div>
-            <div class="form-group">
-              <label for="style" class="col-sm-2 control-label">Style</label>
-              <div class="col-sm-10">
-                <input class="beerStyle form-control" type="text" name="style" id="style">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="alcohol" class="col-sm-2 control-label">Alcohol</label>
-              <div class="col-sm-10">
-                <input class="beerAlcohol form-control" type="number" name="alcohol" id="alcohol">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="url" class="col-sm-2 control-label">Image Url</label>
-              <div class="col-sm-10">
-                <input type="url" name="url" class="form-control" id="alcohol">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="alcohol" class="col-sm-2 control-label">Description</label>
-              <div class="col-sm-10">
-                <textarea name="description" rows="8" cols="40" class="form-control"></textarea>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Re-Brew!</button>
-              </div>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
