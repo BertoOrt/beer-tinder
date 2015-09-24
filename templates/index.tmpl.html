@@ -20,6 +20,7 @@
     <div class="buttons">
       <input class='btn btn-danger btns dislikeButton' type="button" name="name" value="Dislike">
       <input class='btn btn-success btns likeButton' type="button" name="name" value="Like">
+      <input type="hidden" class="currentTimestamp" value={{.current.Timestamp}}>
     </div>
   </div>
   <div class="modal fade" id="beerList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -90,12 +91,12 @@
                     </td>
                     <td>
                       <form action="/currentBeer" method="post">
-                        <input type="hidden" name="name" value={{$beer.Timestamp}}>
+                        <input type="hidden" name="time" value={{$beer.Timestamp}}>
                         <button type="submit" class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
                       </form>
                       <button data-toggle="modal" data-target={{print "#edit" $beer.Timestamp}} class="editBeer btn btn-info btn-xs"><i class="fa fa-edit"></i></button>
                       <form action="/deleteBeer" method="post">
-                        <input type="hidden" name="name" value={{$beer.Timestamp}}>
+                        <input type="hidden" name="time" value={{$beer.Timestamp}}>
                         <button type="submit" class="btn btn-danger btn-xs" ><i class="fa fa-trash-o"></i></button>
                       </form>
                     </td>
@@ -138,13 +139,13 @@
             <div class="form-group">
               <label for="alcohol" class="col-sm-2 control-label">Alcohol</label>
               <div class="col-sm-10">
-                <input type="number" name="alcohol" class="form-control" id="alcohol">
+                <input type="number" step="any" min="0" name="alcohol" class="form-control" id="alcohol">
               </div>
             </div>
             <div class="form-group">
               <label for="url" class="col-sm-2 control-label">Image Url</label>
               <div class="col-sm-10">
-                <input type="url" name="url" class="form-control" id="url">
+                <input type="text" name="url" class="form-control" id="url">
               </div>
             </div>
             <div class="form-group">
@@ -188,19 +189,19 @@
               <div class="form-group">
                 <label for="style" class="col-sm-2 control-label">Style</label>
                 <div class="col-sm-10">
-                  <input class="beerStyle form-control" type="text" name="style" value={{$beer.Style}} id="style">
+                  <input class="beerStyle form-control" type="text" name="style" value={{print $beer.Style " "}} id="style">
                 </div>
               </div>
               <div class="form-group">
                 <label for="alcohol" class="col-sm-2 control-label">Alcohol</label>
                 <div class="col-sm-10">
-                  <input class="beerAlcohol form-control" type="number" name="alcohol" value={{$beer.Alcohol}} id="alcohol">
+                  <input class="beerAlcohol form-control" type="number" step="any" min="0" name="alcohol" value={{$beer.Alcohol}} id="alcohol">
                 </div>
               </div>
               <div class="form-group">
                 <label for="url" class="col-sm-2 control-label">Image Url</label>
                 <div class="col-sm-10">
-                  <input type="url" name="url" class="form-control" value={{$beer.URL}} id="url">
+                  <input type="text" name="url" class="form-control" value={{print $beer.URL " "}} id="url">
                 </div>
               </div>
               <div class="form-group">
@@ -211,7 +212,7 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <input type="hidden" name="name" value="{{$beer.Timestamp}}">
+                  <input type="hidden" name="time" value="{{$beer.Timestamp}}">
                   <button type="submit" class="btn btn-default">Re-Brew!</button>
                 </div>
               </div>

@@ -6,6 +6,7 @@ $(document).ready(function(){
       $('#beer').addClass('rotate-left').delay(300).fadeOut(1);
       $('.like').show()
       $('.display').css("background-image", "url(http://cliparts.co/cliparts/dc9/rR6/dc9rR6ozi.svg)")
+      $.post("/tallyBeer", {"time": $(".currentTimestamp").val(), "score": "Up"})
       setTimeout(function () {
         $('.like').hide()
         $('#beer').removeClass('rotate-left').fadeIn(1)
@@ -16,6 +17,7 @@ $(document).ready(function(){
       $('#beer').addClass('rotate-right').delay(300).fadeOut(1);
       $('.dislike').show()
       $('.display').css("background-image", "url(http://www.clker.com/cliparts/1/1/9/2/12065738771352376078Arnoud999_Right_or_wrong_5.svg.med.png)")
+      $.post("/tallyBeer", {"time": $(".currentTimestamp").val(), "score": "Down"})
       setTimeout(function () {
         $('.dislike').hide()
         $('#beer').removeClass('rotate-right').fadeIn(1)

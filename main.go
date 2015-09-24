@@ -2,7 +2,7 @@ package main
 
 import (
 	// "encoding/json"
-	// "fmt"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -20,13 +21,13 @@ type Beer struct {
 	Name        string
 	Brewery     string
 	Style       string
-	Alcohol     int
+	Alcohol     float64
 	Description string
 	URL         string
 	Current     bool
 	Up          int
 	Down        int
-	Timestamp  int32
+	Timestamp   int32
 }
 
 func main() {
@@ -63,15 +64,15 @@ func main() {
 	r.POST("/addBeer", func(c *gin.Context) {
 		name := c.PostForm("name")
 		brewery := c.PostForm("brewery")
-		style := c.PostForm("style")
-		url := c.PostForm("url")
+		style := strings.Trim(c.PostForm("style"), " ")
+		url := strings.Trim(c.PostForm("url"), " ")
 		description := c.PostForm("description")
 		query := bson.M{"current": true}
 		change := bson.M{"$set": bson.M{"current": false}}
-		alcohol, _ := strconv.Atoi(c.PostForm("alcohol"))
+		alcohol, _ := strconv.ParseFloat(c.PostForm("alcohol"), 64)
 		col.UpdateAll(query, change)
 		err = col.Insert(&Beer{Name: name, Brewery: brewery, Style: style, Alcohol: alcohol,
-			 Description: description, URL: url, Up: 0, Down: 0, Current: true, Timestamp: int32(time.Now().Unix())})
+			Description: description, URL: url, Up: 0, Down: 0, Current: true, Timestamp: int32(time.Now().Unix())})
 		if err != nil {
 			panic(err)
 		}
@@ -79,14 +80,49 @@ func main() {
 	})
 
 	r.POST("/deleteBeer", func(c *gin.Context) {
+		time, _ := strconv.Atoi(c.PostForm("time"))
+		err := col.Remove(bson.M{"timestamp": time})
+		if err != nil {
+			panic(err)
+		}
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
 	r.POST("/editBeer", func(c *gin.Context) {
+		name := c.PostForm("name")
+		brewery := c.PostForm("brewery")
+		style := strings.Trim(c.PostForm("style"), " ")
+		url := strings.Trim(c.PostForm("url"), " ")
+		description := c.PostForm("description")
+		alcohol, _ := strconv.ParseFloat(c.PostForm("alcohol"), 64)
+		time, _ := strconv.Atoi(c.PostForm("time"))
+		change := bson.M{"$set": bson.M{"name": name, "brewery": brewery, "style": style, "alcohol": alcohol, "description": description, "url": url}}
+		col.Update(bson.M{"timestamp": time}, change)
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
 	r.POST("/currentBeer", func(c *gin.Context) {
+		time, _ := strconv.Atoi(c.PostForm("time"))
+		query := bson.M{"current": true}
+		change := bson.M{"$set": bson.M{"current": false}}
+		col.UpdateAll(query, change)
+		col.Update(bson.M{"timestamp": time}, bson.M{"$set": bson.M{"current": true}})
+		c.Redirect(http.StatusMovedPermanently, "/")
+	})
+
+	r.POST("/tallyBeer", func(c *gin.Context) {
+		var current Beer
+		time, _ := strconv.Atoi(c.PostForm("time"))
+		score := c.PostForm("score")
+		query := bson.M{"timestamp": time}
+		col.Find(query).One(&current)
+		if score == "Up" {
+			fmt.Println("up")
+			col.Update(query, bson.M{"$set": bson.M{"up": current.Up + 1}})
+		} else {
+			fmt.Println("down")
+			col.Update(query, bson.M{"$set": bson.M{"down": current.Down + 1}})
+		}
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
