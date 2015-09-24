@@ -6,7 +6,7 @@
   <div class="container">
     <div class="title">
       <div class="beerName">
-        <h1>{{.current.ID}}</h1> <a href="#" data-toggle="modal" data-target="#showBeer"><i class="fa fa-info-circle"></i></a>
+        <h1>{{.current.Name}}</h1> <a href="#" data-toggle="modal" data-target="#showBeer"><i class="fa fa-info-circle"></i></a>
       </div>
       <div class="breweryName">
         <h2>{{.current.Brewery}}</h2>
@@ -89,9 +89,15 @@
                       {{$beer.Down}}
                     </td>
                     <td>
-                      <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
-                      <button data-toggle="modal" data-target={{print "#edit" $beer.ID}} class="editBeer btn btn-info btn-xs"><i class="fa fa-edit"></i></button>
-                      <button class="btn btn-danger btn-xs" ><i class="fa fa-trash-o"></i></button>
+                      <form action="/currentBeer" method="post">
+                        <input type="hidden" name="name" value={{$beer.Timestamp}}>
+                        <button type="submit" class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
+                      </form>
+                      <button data-toggle="modal" data-target={{print "#edit" $beer.Timestamp}} class="editBeer btn btn-info btn-xs"><i class="fa fa-edit"></i></button>
+                      <form action="/deleteBeer" method="post">
+                        <input type="hidden" name="name" value={{$beer.Timestamp}}>
+                        <button type="submit" class="btn btn-danger btn-xs" ><i class="fa fa-trash-o"></i></button>
+                      </form>
                     </td>
                   </tr>
                 {{end}}
@@ -158,7 +164,7 @@
     </div>
   </div>
   {{range $key, $beer := .beers}}
-    <div class="modal fade" id={{print "edit" $beer.ID}} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id={{print "edit" $beer.Timestamp}} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -205,6 +211,7 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
+                  <input type="hidden" name="name" value="{{$beer.Timestamp}}">
                   <button type="submit" class="btn btn-default">Re-Brew!</button>
                 </div>
               </div>

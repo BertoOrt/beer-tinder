@@ -2,7 +2,7 @@ package main
 
 import (
 	// "encoding/json"
-	"fmt"
+	// "fmt"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -11,11 +11,12 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 )
 
 // Beer is the model for mongo
 type Beer struct {
-	ID          ID `json:"id" bson:"_id,omitempty"`
+	ID          bson.ObjectId `json:"id" bson:"_id,omitempty"`
 	Name        string
 	Brewery     string
 	Style       string
@@ -25,6 +26,7 @@ type Beer struct {
 	Current     bool
 	Up          int
 	Down        int
+	Timestamp  int32
 }
 
 func main() {
@@ -68,7 +70,8 @@ func main() {
 		change := bson.M{"$set": bson.M{"current": false}}
 		alcohol, _ := strconv.Atoi(c.PostForm("alcohol"))
 		col.UpdateAll(query, change)
-		err = col.Insert(&Beer{Name: name, Brewery: brewery, Style: style, Alcohol: alcohol, Description: description, URL: url, Up: 0, Down: 0, Current: true})
+		err = col.Insert(&Beer{Name: name, Brewery: brewery, Style: style, Alcohol: alcohol,
+			 Description: description, URL: url, Up: 0, Down: 0, Current: true, Timestamp: int32(time.Now().Unix())})
 		if err != nil {
 			panic(err)
 		}
@@ -83,5 +86,10 @@ func main() {
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
+	r.POST("/currentBeer", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/")
+	})
+
+	log.Println("listening...")
 	r.Run(":" + port)
 }
