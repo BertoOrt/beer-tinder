@@ -117,10 +117,8 @@ func main() {
 		query := bson.M{"timestamp": time}
 		col.Find(query).One(&current)
 		if score == "Up" {
-			fmt.Println("up")
 			col.Update(query, bson.M{"$set": bson.M{"up": current.Up + 1}})
 		} else {
-			fmt.Println("down")
 			col.Update(query, bson.M{"$set": bson.M{"down": current.Down + 1}})
 		}
 	})
