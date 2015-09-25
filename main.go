@@ -123,7 +123,6 @@ func main() {
 			fmt.Println("down")
 			col.Update(query, bson.M{"$set": bson.M{"down": current.Down + 1}})
 		}
-		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
 	log.Println("listening...")
