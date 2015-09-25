@@ -1,6 +1,7 @@
 $(document).ready(function(){
     var beerElement = document.getElementById('beer');
     var beer = new Hammer(beerElement);
+    beer.get('pan').set({ direction: Hammer.DIRECTION_ALL, threshold: 1 });
     function like() {
       $('#beer').addClass('rotate-left').delay(300).fadeOut(1);
       $('.like').show()
@@ -23,11 +24,11 @@ $(document).ready(function(){
       }, 500)
     }
 
-    beer.on("panright", function(){
+    beer.on("swiperight", function(){
       like()
     });
 
-    beer.on("panleft", function(){
+    beer.on("swipeleft", function(){
       dislike()
     });
 
