@@ -3,19 +3,23 @@
 {{template "header.tmpl.html"}}
 <body>
   {{template "navbar.tmpl.html"}}
+  <div class="title">
+    <h1>Beer Tinder</h1>
+    <h2>Tell us what you think!</h2>
+  </div>
   <div class="container">
+    <div class="swipe">
+      <div class="image"><div class="beer display"></div></div>
+      <input class="url" type="hidden" name="name" value={{.current.URL}}>
+      <div id="beer"><div class="beer"><div class="status dislike">Dislike!</div><div class="status like">Like!</div></div></div>
+    </div>
     <div class="title">
       <div class="beerName">
-        <h1>{{.current.Name}}</h1> <a href="#" data-toggle="modal" data-target="#showBeer"><i class="fa fa-info-circle"></i></a>
+        <a href="#" data-toggle="modal" data-target="#showBeer"><h1>{{.current.Name}}</h1></a>
       </div>
       <div class="breweryName">
-        <h2>{{.current.Brewery}}</h2>
+        <h2>{{.current.Brewery}} Brewery {{.current.Alcohol}}%</h2>
       </div>
-    </div>
-    <div class="swipe">
-      <div class="image"><div class="avatar display"></div></div>
-      <input class="url" type="hidden" name="name" value={{.current.URL}}>
-      <div id="beer"><div class="avatar beerImage"><div class="status dislike">Dislike!</div><div class="status like">Like!</div></div></div>
     </div>
     <div class="buttons">
       <input class='btn btn-danger btns dislikeButton' type="button" name="name" value="Dislike">
@@ -90,12 +94,12 @@
                       {{$beer.Down}}
                     </td>
                     <td>
-                      <form action="/currentBeer" method="post">
+                      <form action={{print "/makeCurrent/" $beer.Timestamp}} method="post">
                         <input type="hidden" name="time" value={{$beer.Timestamp}}>
                         <button type="submit" class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>
                       </form>
                       <button data-toggle="modal" data-target={{print "#edit" $beer.Timestamp}} class="editBeer btn btn-info btn-xs"><i class="fa fa-edit"></i></button>
-                      <form action="/deleteBeer" method="post">
+                      <form action={{print "/delete/" $beer.Timestamp}} method="post">
                         <input type="hidden" name="time" value={{$beer.Timestamp}}>
                         <button type="submit" class="btn btn-danger btn-xs" ><i class="fa fa-trash-o"></i></button>
                       </form>
@@ -117,7 +121,7 @@
           <h4 class="modal-title" id="myModalLabel">Add a Beer</h4>
         </div>
         <div class="modal-body">
-          <form class="newBeerForm form-horizontal" action="/addBeer" method="post">
+          <form class="newBeerForm form-horizontal" action="/new" method="post">
             <div class="form-group">
               <label for="name" class="col-sm-2 control-label">Name</label>
               <div class="col-sm-10">
@@ -173,7 +177,7 @@
             <h4 class="modal-title" id="myModalLabel">Edit Beer</h4>
           </div>
           <div class="modal-body">
-            <form class="form-horizontal" action="/editBeer" method="post">
+            <form class="form-horizontal" action={{print "/edit/" $beer.Timestamp}} method="post">
               <div class="form-group">
                 <label for="name" class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-10">
@@ -258,12 +262,14 @@
               </td>
               <td>
                 <div class="infoUp">
-                  <i class="fa fa-thumbs-up"></i> {{.current.Up}}
+                  <i class="fa fa-thumbs-up"></i>
+                  <span>{{.current.Up}}</span>
                 </div>
               </td>
               <td>
                 <div class="infoDown">
-                  <i class="fa fa-thumbs-down"></i> {{.current.Down}}
+                  <i class="fa fa-thumbs-down"></i>
+                  <span>{{.current.Down}}</span>
                 </div>
               </td>
             </tr>

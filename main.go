@@ -2,7 +2,7 @@ package main
 
 import (
 	// "encoding/json"
-	"fmt"
+	// "fmt"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -61,7 +61,16 @@ func main() {
 		})
 	})
 
-	r.POST("/addBeer", func(c *gin.Context) {
+	r.GET("/current", func(c *gin.Context) {
+		var current Beer
+		query := bson.M{"current": true}
+		col.Find(query).One(&current)
+		c.JSON(200, gin.H{
+			"data": current,
+		})
+	})
+
+	r.POST("/new", func(c *gin.Context) {
 		name := c.PostForm("name")
 		brewery := c.PostForm("brewery")
 		style := strings.Trim(c.PostForm("style"), " ")
@@ -79,8 +88,8 @@ func main() {
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
-	r.POST("/deleteBeer", func(c *gin.Context) {
-		time, _ := strconv.Atoi(c.PostForm("time"))
+	r.POST("/delete/:id", func(c *gin.Context) {
+		time, _ := strconv.Atoi(c.Param("id"))
 		err := col.Remove(bson.M{"timestamp": time})
 		if err != nil {
 			panic(err)
@@ -88,21 +97,29 @@ func main() {
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
-	r.POST("/editBeer", func(c *gin.Context) {
+	r.POST("/edit/:id", func(c *gin.Context) {
 		name := c.PostForm("name")
 		brewery := c.PostForm("brewery")
 		style := strings.Trim(c.PostForm("style"), " ")
 		url := strings.Trim(c.PostForm("url"), " ")
 		description := c.PostForm("description")
 		alcohol, _ := strconv.ParseFloat(c.PostForm("alcohol"), 64)
-		time, _ := strconv.Atoi(c.PostForm("time"))
-		change := bson.M{"$set": bson.M{"name": name, "brewery": brewery, "style": style, "alcohol": alcohol, "description": description, "url": url}}
+		time, _ := strconv.Atoi(c.Param("id"))
+		update := bson.M{
+			"name":        name,
+			"brewery":     brewery,
+			"style":       style,
+			"alcohol":     alcohol,
+			"description": description,
+			"url":         url,
+		}
+		change := bson.M{"$set": update}
 		col.Update(bson.M{"timestamp": time}, change)
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
-	r.POST("/currentBeer", func(c *gin.Context) {
-		time, _ := strconv.Atoi(c.PostForm("time"))
+	r.POST("/makeCurrent/:id", func(c *gin.Context) {
+		time, _ := strconv.Atoi(c.Param("id"))
 		query := bson.M{"current": true}
 		change := bson.M{"$set": bson.M{"current": false}}
 		col.UpdateAll(query, change)
@@ -110,10 +127,10 @@ func main() {
 		c.Redirect(http.StatusMovedPermanently, "/")
 	})
 
-	r.POST("/tallyBeer", func(c *gin.Context) {
+	r.POST("/tally/:id", func(c *gin.Context) {
 		var current Beer
-		time, _ := strconv.Atoi(c.PostForm("time"))
 		score := c.PostForm("score")
+		time, _ := strconv.Atoi(c.Param("id"))
 		query := bson.M{"timestamp": time}
 		col.Find(query).One(&current)
 		if score == "Up" {
@@ -121,6 +138,7 @@ func main() {
 		} else {
 			col.Update(query, bson.M{"$set": bson.M{"down": current.Down + 1}})
 		}
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
 	log.Println("listening...")
